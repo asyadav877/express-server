@@ -1,0 +1,41 @@
+name: Deploy to Staging Environment
+
+# Trigger the workflow when a push occurs on the 'staging' branch or when the watched workflow succeeds
+on:
+  push:
+    branches:
+      - staging  # Trigger on pushes to the 'staging' branch
+  workflow_run:
+    workflows: ["Build Application"]  # Name of the workflow you want to watch
+    types:
+      - completed
+    branches:
+      - staging
+    status:
+      - success  # Watch for successful runs of the build workflow
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      # Step to check out the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step to configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Step to update the Kubernetes deployment image
+      - name: Update Kubernetes Deployment Image
+        run: |
+          kubectl set image deployment/your-deployment-name your-container-name=${{ secrets.DOCKER_REGISTRY_URL }}/express-server:${{ github.sha }}
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
