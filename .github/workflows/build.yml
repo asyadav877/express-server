@@ -28,4 +28,5 @@ jobs:
       # Step 4: Run tests
       - name: Run tests
         run: npm test
+        working-directory: /home/runner/work/express-server/express-server/backend
 
