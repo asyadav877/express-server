@@ -19,16 +19,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21.1'
-
-      # Step 3: Move to backend directory
-      - name: Change to backend directory
-        run: cd backend
-
-      # Step 4: Install dependencies
-      - name: Install dependencies
+      
+      # Step 3: Installing dependencies
+      - name: Run npm install
         run: npm install
+        working-directory: /home/runner/work/express-server/express-server/backend
 
-      # Step 5: Run tests
+      # Step 4: Run tests
       - name: Run tests
         run: npm test
 
