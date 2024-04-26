@@ -20,11 +20,15 @@ jobs:
         with:
           node-version: '21.1'
 
-      # Step 3: Install dependencies
+      # Step 3: Move to backend directory
+      - name: Change to backend directory
+        run: cd backend
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run tests
+      # Step 5: Run tests
       - name: Run tests
         run: npm test
 
