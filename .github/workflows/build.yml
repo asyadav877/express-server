@@ -22,7 +22,7 @@ jobs:
 
       # Step 3: Move to backend directory
       - name: Change to backend directory
-        run: cd backend
+        run: cd express-server/backend
 
       # Step 4: Install dependencies
       - name: Install dependencies
