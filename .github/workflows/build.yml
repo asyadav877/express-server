@@ -29,4 +29,16 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: /home/runner/work/express-server/express-server/backend
+      
+      # Step 5: Build Docker image with commit ID as tag (only if tests pass)
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERID }}/express-server:${{ github.sha::10 }} .
+        working-directory: /home/runner/work/express-server/express-server/
+      
+      # Step 6: Push Docker image to Docker Hub (only if tests pass)
+      - name: Push Docker image to Docker Hub
+        if: success()
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/express-server:${{ github.sha::10 }}
 
